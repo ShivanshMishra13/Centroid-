@@ -1,0 +1,37 @@
+#include <iostream>
+#include <map>
+
+void testfunc()
+{
+    std::cout << "i am test func" << std::endl;
+}
+
+void Route(std::string route, void (*func)())
+{
+    static int count = 0;
+    using fn = void();
+    fn *arr[1000];
+    arr[count] = func;
+
+    std::map<std::string, int> mymap;
+    mymap[route] = count;
+    //getting the function from the url
+
+    std::map<std::string, int>::iterator it;
+
+    it = mymap.find("/get");
+    if (it == mymap.end())
+    {
+        std::cout << "404 route not found";
+    }
+    else
+    {
+        arr[it->second]();
+    }
+    count++;
+    std::cout<<count<<std::endl;
+}
+int main()
+{
+    Route("/get", &testfunc);
+}
