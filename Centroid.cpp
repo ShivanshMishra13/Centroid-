@@ -3,7 +3,7 @@
 #include <iostream>
 #include <conio.h>
 #include <map>
-
+#include <vector>
 namespace WEB
 {
 class Server
@@ -32,10 +32,8 @@ class Server
         {
             int connection = server.Accept();
             std::string msg = server.Read(connection);
-          
-            std::string route = GetRoute(msg);
 
-            
+            std::string route = GetRoute(msg);
 
             bool response = SendData(route, connection);
 
@@ -52,17 +50,38 @@ class Server
 
     bool SendData(std::string route, int connection)
     {
+        int t = 0;
+        int spath;
+        std::string fpath = "";
         for (const auto &x : Getmap)
         {
-           
-            if (x.first == route)
+            int k = helper.bestpath(x.first, route);
+            if (k > t)
             {
-              int datanum=Getdata[x.second];
-              std::string temp=helper.getData(route,datanum);
-              struct HELP::Result gh=helper.extractUrl(temp);
-              
-              
-                std::string res = Getarr[x.second]();
+                t = k;
+                fpath = x.first;
+                spath = x.second;
+            }
+            else
+            {
+            }
+        }
+
+        for (const auto &x : Getmap)
+        {
+            if (t > 0)
+            {
+                std::string h = helper.getparams(route, fpath);
+                std::string *xh = helper.getarr(h);
+                std::cout << xh[0] + "-params" << std::endl;
+                std::cout << helper.getparams(route, fpath) + "util" << std::endl;
+
+                //      std::cout<<kh[0]+"yo this is my output" <<std::endl;
+                int datanum = Getdata[spath];
+                std::string temp = helper.getData(route, datanum);
+                struct HELP::Result gh = helper.extractUrl(temp);
+
+                std::string res = Getarr[spath]();
                 server.Send(connection, "HTTP/1.0 200 OK\n");
                 server.Send(connection, "Content-Type: text/html\n");
                 server.Send(connection, "\n");
@@ -73,7 +92,6 @@ class Server
             }
         }
 
-        
         server.Send(connection, "HTTP/1.0 200 OK\n");
         server.Send(connection, "Content-Type: text/html\n");
         server.Send(connection, "\n");
@@ -83,11 +101,11 @@ class Server
         return false;
     }
 
-    void Get(std::string route, int datanum,std::string (*func)())
+    void Get(std::string route, int datanum, std::string (*func)())
     {
         static int count = 0;
         Getarr[count] = func;
-        Getdata[count]=datanum;
+        Getdata[count] = datanum;
         Getmap[route] = count;
 
         count++;
@@ -103,4 +121,4 @@ class Server
     }
 };
 
-} // namespace Web
+} // namespace WEB

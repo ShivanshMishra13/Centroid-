@@ -1,20 +1,83 @@
 #include <iostream>
-
+#include <vector>
 namespace HELP
 {
-    struct Result{
+struct Result
+{
     std::string data[100];
-    
 };
 class Helper
 {
   public:
-  
-  
-
     Helper()
     {
         // Doing nothing
+    }
+
+    int bestpath(std::string str, std::string path)
+    {
+        std::string params = "";
+
+        for (int i = 0; i < path.length(); i++)
+        {
+            if (path[i] == str[i])
+            {
+                params += path[i];
+            }
+        }
+        return params.length();
+    }
+
+    std::string *getarr(std::string str)
+    {
+        std::string *k = new std::string[100];
+        int n = 0;
+
+        str.erase(0, 1);
+        std::string temp = "";
+        int i = 0;
+        while (i < str.length())
+        {
+            if (str[i] == '/')
+            {
+                k[n] = temp;
+                temp = "";
+                n++;
+            }
+            else
+            {
+                temp += str[i];
+            }
+            i++;
+        }
+        k[n] = temp;
+        return k;
+    }
+    std::string getparams(std::string path, std::string str)
+    {
+        std::string params = path;
+
+        for (int i = 0; i < path.length(); i++)
+        {
+            if (path[i] == str[i])
+            {
+                params.erase(0, 1);
+            }
+        }
+        return params;
+    }
+    std::string contains(std::string path, std::string str)
+    {
+        std::string params = "";
+
+        for (int i = 0; i < path.length(); i++)
+        {
+            if (path[i] == str[i])
+            {
+                params += path[i];
+            }
+        }
+        return params;
     }
     //split function
     std::string split(std::string str, char target)
@@ -94,7 +157,7 @@ class Helper
             }
         }
         std::string result = "";
-        int junkSlashCount =(noofs - datapoints);
+        int junkSlashCount = (noofs - datapoints);
 
         int leftSlash = junkSlashCount;
         for (char s : route)
@@ -105,38 +168,32 @@ class Helper
             }
             else
             {
-                if(s=='/'){
-                    
-                leftSlash -= 1;
-                
+                if (s == '/')
+                {
+                    leftSlash -= 1;
                 }
             }
         }
 
-        
         return result;
     }
-   struct Result extractUrl(std::string route){
-       struct HELP::Result res;
-       int pos=0;
-       for(char s:route){
-           
-           if(s=='/'){
-               pos=pos+1;
-           }else{
-               res.data[pos]+=s;
-               
-           }
-           
-           
-       }
-       return res;
-       
-   }
+    struct Result extractUrl(std::string route)
+    {
+        struct HELP::Result res;
+        int pos = 0;
+        for (char s : route)
+        {
+            if (s == '/')
+            {
+                pos = pos + 1;
+            }
+            else
+            {
+                res.data[pos] += s;
+            }
+        }
+        return res;
+    }
 };
 
 } // namespace HELP
-
-
-
- 
